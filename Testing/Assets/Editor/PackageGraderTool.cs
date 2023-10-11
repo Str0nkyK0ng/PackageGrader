@@ -30,9 +30,12 @@ public class PackageGraderTool : EditorWindow
     private Button deleteButton, importButton, openSceneButton;
     public IntegerField sceneIndex;
 
+
+    public GoogleDriveManager manager;
     public void Awake()
     {
-        SelectFolder();
+        Debug.Log("Awake");
+
     }
 
     public void SelectFolder()
@@ -56,6 +59,19 @@ public class PackageGraderTool : EditorWindow
         m_packagePathHeader.style.unityTextOutlineWidth = 2;
 
         m_packagePathHeader.text = PACKAGE_PATH;
+
+
+        Button pullItem = new Button();
+        pullItem.text = "Download test";
+        pullItem.clicked += delegate {
+            string[] fileIDs =
+            {
+                "1w108wHLByuvutZOtlSAY9ZpCdhIXy9VV","1wjt-JwnamAeHhd9jL8sSUaZruG5c8k8O","1hsWUVULJV8Kk8dgqmthiMoVYpt6QKysa",
+            };
+            DownloadFiles(fileIDs);
+        };
+        rootVisualElement.Add(pullItem);
+
 
         Button selectFolderButton = new Button();
         selectFolderButton.text = "Select Folder";
@@ -246,6 +262,33 @@ public class PackageGraderTool : EditorWindow
         {
             Debug.LogError("No scenes found in folder " + currentlySelectedPackage);
         }
+
+    }
+
+    public async void DownloadFile(string fileID) {
+        manager = new GoogleDriveManager();
+        EditorUtility.DisplayProgressBar("Downloading file id:"+fileID, "...", .5f);
+        await manager.GetFile(fileID, Application.dataPath);
+        EditorUtility.ClearProgressBar();
+    }
+
+    public async void DownloadFiles(string[] fileIDs)
+    {
+        //Batch together our asset editing so unity doesn't import after each one
+        AssetDatabase.StartAssetEditing();
+
+        manager = new GoogleDriveManager();
+
+        for (int x = 0; x < fileIDs.Length; x++)
+        {
+            EditorUtility.DisplayProgressBar("Downloading Files", "Current File Id:"+fileIDs[x], (x*1.0f)/(fileIDs.Length*1.0f));
+            await manager.GetFile(fileIDs[x], Application.dataPath);
+        }
+        EditorUtility.ClearProgressBar();
+
+        //Stop asset editing
+        AssetDatabase.StopAssetEditing();
+
 
     }
 }
