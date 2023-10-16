@@ -1,4 +1,4 @@
-# SI Package Grader / Downloader
+# SI Package Grader and Downloader
 
 Designed to speed up the process of grading `.unitypackage` files for GLSI
 
