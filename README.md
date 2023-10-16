@@ -12,7 +12,7 @@ The `PackageDownloader` and `PackageGraderTool`
 
 ### Package Downloader
 
-![Video](./Docs/DownloaderExample.mov)
+<video src='./Docs/DownloaderExample.mov' width=600>
 
 The package downloader is capable of downloading multiple `.unitypackage` files from a Google sheets.
 
