@@ -41,6 +41,32 @@ public class GoogleSheetsJSONWrapper
         return FindAllEntries(IndexOfHeader(header), searchValue);
     }
 
+    public List<string[]> CompoundFilter(string[] headers, string[] searchValues)
+    {
+        List<string[]> matches = new List<string[]>();
+        foreach (string[] data in rawData)
+        {
+            bool invalid = false;
+           for(int x=0;x<headers.Length;x++)
+            {
+                string header = headers[x];
+                //Get the header index
+                int index = IndexOfHeader(header);
+                if (data[index] != searchValues[x])
+                {
+                    invalid = true;
+                    break;
+                }
+            }
+            if (!invalid)
+            {
+                matches.Add(data);
+            }
+        }
+        return matches;
+    }
+
+
     public List<string[]> FindAllEntries(int headerIndex, string searchValue)
     {
         List<string[]> matches = new List<string[]>();
@@ -64,13 +90,15 @@ public class GoogleSheetsJSONWrapper
         return ids;
     }
 
-    public List<string> GetDownloadIDs(string header, List<string[]> values)
+    public List<(string,string)> GetDownloadIDs(string header, List<string[]> values, string addtionalHeader)
     {
         int headerIndex = IndexOfHeader(header);
-        List<string> ids = new List<string>();
+        int additionalheaderIndex = IndexOfHeader(addtionalHeader);
+
+        List<(string,string)> ids = new List<(string,string)>();
         foreach (string[] v in values)
         {
-            ids.Add(v[headerIndex]);
+            ids.Add((v[headerIndex], v[additionalheaderIndex]));
         }
         return ids;
     }

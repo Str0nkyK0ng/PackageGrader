@@ -10,11 +10,11 @@ public class PackageGraderTool : EditorWindow
 {
 
 
-    string PACKAGE_PATH = "Assets/UnimportedPackages";
+    string PACKAGE_PATH = "Assets/Packages";
 
     private string currentlySelectedPackage;
     private string packageFolderPath;
-    string[] KNOWN_FOLDERS = { "Assets/Scenes", "Assets/UnimportedPackages", "Assets/Editor" };
+    string[] KNOWN_FOLDERS = { "Assets/Scenes", "Assets/Packages", "Assets/Editor" };
 
     private VisualElement m_RightPane;
     private ListView m_leftPane;
@@ -59,19 +59,6 @@ public class PackageGraderTool : EditorWindow
         m_packagePathHeader.style.unityTextOutlineWidth = 2;
 
         m_packagePathHeader.text = PACKAGE_PATH;
-
-
-        Button pullItem = new Button();
-        pullItem.text = "Download test";
-        pullItem.clicked += delegate {
-            //string[] fileIDs =
-            //{
-            //    "1w108wHLByuvutZOtlSAY9ZpCdhIXy9VV","1wjt-JwnamAeHhd9jL8sSUaZruG5c8k8O","1hsWUVULJV8Kk8dgqmthiMoVYpt6QKysa",
-            //};
-            //DownloadFiles(fileIDs);
-
-        };
-        rootVisualElement.Add(pullItem);
 
 
         Button selectFolderButton = new Button();
@@ -205,7 +192,7 @@ public class PackageGraderTool : EditorWindow
             string name = file.FullName;
             Debug.Log("Considering File:" + name);
 
-            if (!name.Contains("Editor") && !name.Contains("UnimportedPackages"))
+            if (!name.Contains("Editor") && !name.Contains("Packages"))
             {
                 Debug.Log("Deleting:" + name);
                 FileUtil.DeleteFileOrDirectory(file.FullName);
@@ -220,7 +207,7 @@ public class PackageGraderTool : EditorWindow
             string name = file.FullName;
             Debug.Log("Considering File:" + name);
 
-            if (!name.Contains("Editor") && !name.Contains("UnimportedPackages")) {
+            if (!name.Contains("Editor") && !name.Contains("Packages")) {
                 Debug.Log("Deleting:" + name);
                 FileUtil.DeleteFileOrDirectory(file.FullName);
             }
@@ -265,32 +252,4 @@ public class PackageGraderTool : EditorWindow
         }
 
     }
-
-    public async void DownloadFile(string fileID) {
-        manager = new GoogleDriveManager();
-        EditorUtility.DisplayProgressBar("Downloading file id:" + fileID, "...", .5f);
-        await manager.GetFile(fileID, Application.dataPath);
-        EditorUtility.ClearProgressBar();
-    }
-
-    public async void DownloadFiles(string[] fileIDs)
-    {
-        //Batch together our asset editing so unity doesn't import after each one
-        AssetDatabase.StartAssetEditing();
-
-        manager = new GoogleDriveManager();
-
-        for (int x = 0; x < fileIDs.Length; x++)
-        {
-            EditorUtility.DisplayProgressBar("Downloading Files", "Current File Id:" + fileIDs[x], (x * 1.0f) / (fileIDs.Length * 1.0f));
-            await manager.GetFile(fileIDs[x], Application.dataPath);
-        }
-        EditorUtility.ClearProgressBar();
-
-        //Stop asset editing
-        AssetDatabase.StopAssetEditing();
-
-    }
-
-
 }

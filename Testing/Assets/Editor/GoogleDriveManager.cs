@@ -19,6 +19,41 @@ public class GoogleDriveManager
 
     public string token;
 
+    public async Task GetFile(string fileReference, string fileName, string destinationPath)
+    {
+        if (token == null || token == "")
+            await GetToken();
+        string requestURL = API_URL + fileReference + "?alt=media";
+        destinationPath = destinationPath + "/Packages/" + fileName + ".unitypackage";
+        Debug.Log("Attempting to get file...");
+        using (UnityWebRequest webRequest = new UnityWebRequest(requestURL))
+        {
+            webRequest.method = UnityWebRequest.kHttpVerbGET;
+
+            DownloadHandlerFile downloadHandlerFile = new DownloadHandlerFile(destinationPath);
+            webRequest.downloadHandler = downloadHandlerFile;
+            webRequest.SetRequestHeader("Authorization", "Bearer " + token);
+            webRequest.SendWebRequest();
+
+            while (!webRequest.isDone || !downloadHandlerFile.isDone)
+            {
+                await Task.Yield();
+            }
+
+
+            if (webRequest.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log("Failed:" + webRequest.error);
+
+            }
+            else
+            {
+                Debug.Log("Completed Download to:" + destinationPath);
+            }
+        }
+
+    }
+
     public async Task GetFile(string fileReference, string destinationPath)
     {
         if(token==null || token == "")
