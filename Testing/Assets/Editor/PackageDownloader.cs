@@ -192,16 +192,30 @@ public class PackageDownloader: EditorWindow
             manager = new GoogleDriveManager();
         }
 
-        for (int x = 0; x < ids.Count; x++)
+        try
         {
-            string fileId = ids[x].Item1.Split("=")[1];
-            EditorUtility.DisplayProgressBar("Downloading Files", "Current Package:" + ids[x].Item2, (x * 1.0f) / (ids.Count * 1.0f));
-            await manager.GetFile(fileId, ids[x].Item2, Application.dataPath);
+            for (int x = 0; x < ids.Count; x++)
+            {
+
+
+    
+                string fileId = ids[x].Item1;
+                Debug.Log("File Id:"+fileId);
+                fileId=fileId.Split("=")[1];
+                EditorUtility.DisplayProgressBar("Downloading Files", "Current Package:" + ids[x].Item2, (x * 1.0f) / (ids.Count * 1.0f));
+                await manager.GetFile(fileId, ids[x].Item2, Application.dataPath);
+            }
+            EditorUtility.ClearProgressBar();
+            AssetDatabase.StopAssetEditing();
         }
-        EditorUtility.ClearProgressBar();
+        catch
+        {
+            AssetDatabase.StopAssetEditing();
+
+        }
+
 
         //Stop asset editing
-        AssetDatabase.StopAssetEditing();
     }
     
 

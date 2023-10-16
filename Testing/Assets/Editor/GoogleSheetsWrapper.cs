@@ -18,20 +18,41 @@ public class GoogleSheetsJSONWrapper
     public GoogleSheetsJSONWrapper(string[][] data)
     {
         rawData = data;
-        initHeaders();
+        init();
     }
 
-    public void initHeaders()
+    public void init()
     {
         headers = rawData[0];
+
+        for(int x = 1; x < rawData.Length; x++)
+        {
+
+            List<string> data = new List<string>(rawData[x]);
+            int offset = 0;
+            for(int y = 0; y < data.Count-offset; y++)
+            {
+                if (data[y] == "")
+                {
+                    Debug.Log("Removed a bit!");
+                    data.RemoveAt(y);
+                    offset++;
+                    y--;
+                }
+            }
+            rawData[x] = data.ToArray();
+        }
+        
 
     }
     public int IndexOfHeader(string header)
     {
         for (int x = 0; x < headers.Length; x++)
         {
-            if (headers[x] == header)
+            if (headers[x] == header) {
+                Debug.Log(header + " is at index " + x);
                 return x;
+            }
         }
         throw new Exception("String \"" + header + "\" does not exist");
     }
@@ -58,6 +79,8 @@ public class GoogleSheetsJSONWrapper
                     break;
                 }
             }
+
+            //If it's valid, add it to our matches
             if (!invalid)
             {
                 matches.Add(data);
@@ -98,7 +121,13 @@ public class GoogleSheetsJSONWrapper
         List<(string,string)> ids = new List<(string,string)>();
         foreach (string[] v in values)
         {
-            ids.Add((v[headerIndex], v[additionalheaderIndex]));
+            (string, string) newData = (v[headerIndex], v[additionalheaderIndex]);
+            for(int x = 0; x < v.Length; x++)
+            {
+                Debug.Log("("+x+"):" + v[x]);
+            }
+            Debug.Log("Info:" + v[headerIndex] + " and " + v[additionalheaderIndex]);
+            ids.Add(newData);
         }
         return ids;
     }
