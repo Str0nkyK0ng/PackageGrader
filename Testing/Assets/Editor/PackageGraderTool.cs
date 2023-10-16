@@ -14,7 +14,7 @@ public class PackageGraderTool : EditorWindow
 
     private string currentlySelectedPackage;
     private string packageFolderPath;
-    string[] KNOWN_FOLDERS = { "Assets/Scenes", "Assets/UnimportedPackages", "Assets/Editor"};
+    string[] KNOWN_FOLDERS = { "Assets/Scenes", "Assets/UnimportedPackages", "Assets/Editor" };
 
     private VisualElement m_RightPane;
     private ListView m_leftPane;
@@ -64,11 +64,12 @@ public class PackageGraderTool : EditorWindow
         Button pullItem = new Button();
         pullItem.text = "Download test";
         pullItem.clicked += delegate {
-            string[] fileIDs =
-            {
-                "1w108wHLByuvutZOtlSAY9ZpCdhIXy9VV","1wjt-JwnamAeHhd9jL8sSUaZruG5c8k8O","1hsWUVULJV8Kk8dgqmthiMoVYpt6QKysa",
-            };
-            DownloadFiles(fileIDs);
+            //string[] fileIDs =
+            //{
+            //    "1w108wHLByuvutZOtlSAY9ZpCdhIXy9VV","1wjt-JwnamAeHhd9jL8sSUaZruG5c8k8O","1hsWUVULJV8Kk8dgqmthiMoVYpt6QKysa",
+            //};
+            //DownloadFiles(fileIDs);
+
         };
         rootVisualElement.Add(pullItem);
 
@@ -168,11 +169,11 @@ public class PackageGraderTool : EditorWindow
         m_RightHeader.text = currentlySelectedPackage;
         packageFolderPath = null;
     }
-    
- 
+
+
     public string[] GetPackages()
     {
-        if(PACKAGE_PATH == null || PACKAGE_PATH == string.Empty)
+        if (PACKAGE_PATH == null || PACKAGE_PATH == string.Empty)
         {
             Debug.LogError("No path was specified.");
             return null;
@@ -183,7 +184,7 @@ public class PackageGraderTool : EditorWindow
             Debug.LogError("No Packages Found in Folder");
         }
         return packages;
-        
+
     }
 
 
@@ -220,7 +221,7 @@ public class PackageGraderTool : EditorWindow
             Debug.Log("Considering File:" + name);
 
             if (!name.Contains("Editor") && !name.Contains("UnimportedPackages")) {
-                Debug.Log("Deleting:"+name);
+                Debug.Log("Deleting:" + name);
                 FileUtil.DeleteFileOrDirectory(file.FullName);
             }
             AssetDatabase.Refresh();
@@ -236,13 +237,13 @@ public class PackageGraderTool : EditorWindow
         var folders = AssetDatabase.GetSubFolders("Assets");
         foreach (var folder in folders)
         {
-            if (!KNOWN_FOLDERS.Contains(folder)) { 
+            if (!KNOWN_FOLDERS.Contains(folder)) {
                 packageFolderPath = folder;
-                Debug.Log("Found the package folder path:"+packageFolderPath);
+                Debug.Log("Found the package folder path:" + packageFolderPath);
                 return;
             }
         }
-        
+
         Debug.LogError("Cannot get package path, are you sure the package has been imported?");
         packageFolderPath = null;
 
@@ -267,7 +268,7 @@ public class PackageGraderTool : EditorWindow
 
     public async void DownloadFile(string fileID) {
         manager = new GoogleDriveManager();
-        EditorUtility.DisplayProgressBar("Downloading file id:"+fileID, "...", .5f);
+        EditorUtility.DisplayProgressBar("Downloading file id:" + fileID, "...", .5f);
         await manager.GetFile(fileID, Application.dataPath);
         EditorUtility.ClearProgressBar();
     }
@@ -281,7 +282,7 @@ public class PackageGraderTool : EditorWindow
 
         for (int x = 0; x < fileIDs.Length; x++)
         {
-            EditorUtility.DisplayProgressBar("Downloading Files", "Current File Id:"+fileIDs[x], (x*1.0f)/(fileIDs.Length*1.0f));
+            EditorUtility.DisplayProgressBar("Downloading Files", "Current File Id:" + fileIDs[x], (x * 1.0f) / (fileIDs.Length * 1.0f));
             await manager.GetFile(fileIDs[x], Application.dataPath);
         }
         EditorUtility.ClearProgressBar();
@@ -289,6 +290,7 @@ public class PackageGraderTool : EditorWindow
         //Stop asset editing
         AssetDatabase.StopAssetEditing();
 
-
     }
+
+
 }
