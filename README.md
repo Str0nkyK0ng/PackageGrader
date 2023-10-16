@@ -12,8 +12,6 @@ The `PackageDownloader` and `PackageGraderTool`
 
 ### Package Downloader
 
-<video src='./Docs/DownloaderExample.mov' width=100>
-
 The package downloader is capable of downloading multiple `.unitypackage` files from a Google sheets.
 
 In the *Document Id* field, type the ID of the google sheets you're trying to download from. The id is found in the URL to the document. For example, the URL:
