@@ -7,7 +7,9 @@ This project contains a full unity project, but only files in the `Editor` folde
 ## To Use
 
 The editor application adds two new editor windows:
-![](./Docs/Windows.png)
+
+<img src="./Docs/Windows.png" alt="Menu" width="200"/>
+
 The `PackageDownloader` and `PackageGraderTool`
 
 ### Package Downloader
