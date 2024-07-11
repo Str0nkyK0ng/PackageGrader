@@ -171,6 +171,26 @@ public class PackageDownloader: EditorWindow
             values.Add(filter.Item2.value);
         }
         matches = sheetsData.CompoundFilter(headers.ToArray(), values.ToArray());
+
+        //Double check / purge any blank entries
+        for(int x=0;x<matches.Count;x++)
+        {
+            int offset = 0;
+            for(int y = 0; y < matches[x].Length-offset;y++)
+            {
+                //This is a bit rough
+                if (matches[x][y] == "")
+                {
+                    //convert to list
+                    List<string> tempMatch = new List<string>(matches[x]);
+                    //remove the blank index
+                    tempMatch.RemoveAt(y);
+                    y--;
+                    offset++;
+                    matches[x] = tempMatch.ToArray();
+                }
+            }
+        }
         if (matchLabel == null) {
             matchLabel = new Label(matches.Count + " matches found");
             rootVisualElement.Add(matchLabel);

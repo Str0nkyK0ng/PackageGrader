@@ -32,9 +32,8 @@ public class GoogleSheetsJSONWrapper
             int offset = 0;
             for(int y = 0; y < data.Count-offset; y++)
             {
-                if (data[y] == "")
+                if (data[y] == "" || data[y]==" ")
                 {
-                    Debug.Log("Removed a bit!");
                     data.RemoveAt(y);
                     offset++;
                     y--;
@@ -115,6 +114,7 @@ public class GoogleSheetsJSONWrapper
 
     public List<(string,string)> GetDownloadIDs(string header, List<string[]> values, string addtionalHeader)
     {
+        Debug.Log("Getting Download Ideas from:" + header + " with additional header " + addtionalHeader);
         int headerIndex = IndexOfHeader(header);
         int additionalheaderIndex = IndexOfHeader(addtionalHeader);
 
@@ -122,10 +122,6 @@ public class GoogleSheetsJSONWrapper
         foreach (string[] v in values)
         {
             (string, string) newData = (v[headerIndex], v[additionalheaderIndex]);
-            for(int x = 0; x < v.Length; x++)
-            {
-                Debug.Log("("+x+"):" + v[x]);
-            }
             Debug.Log("Info:" + v[headerIndex] + " and " + v[additionalheaderIndex]);
             ids.Add(newData);
         }
