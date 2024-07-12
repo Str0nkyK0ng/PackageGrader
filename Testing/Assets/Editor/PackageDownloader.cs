@@ -173,24 +173,23 @@ public class PackageDownloader: EditorWindow
         matches = sheetsData.CompoundFilter(headers.ToArray(), values.ToArray());
 
         //Double check / purge any blank entries
-        for(int x=0;x<matches.Count;x++)
+        for (int x = 0; x < matches.Count; x++)
         {
-            int offset = 0;
-            for(int y = 0; y < matches[x].Length-offset;y++)
-            {
-                //This is a bit rough
-                if (matches[x][y] == "")
-                {
-                    //convert to list
-                    List<string> tempMatch = new List<string>(matches[x]);
-                    //remove the blank index
-                    tempMatch.RemoveAt(y);
-                    y--;
-                    offset++;
-                    matches[x] = tempMatch.ToArray();
-                }
-            }
+            matches[x] = matches[x].Where(s => !string.IsNullOrEmpty(s)).ToArray();
         }
+
+
+        //now lets pring them for my own sake
+        for (int x = 0; x < matches.Count; x++)
+        {
+            string info = "";
+            for(int y=0;y< matches[x].Length; y++)
+            {
+                info += "\n[" + y + "]\"" + matches[x][y] + "\"";
+            }
+            Debug.Log(info);
+        }
+
         if (matchLabel == null) {
             matchLabel = new Label(matches.Count + " matches found");
             rootVisualElement.Add(matchLabel);
